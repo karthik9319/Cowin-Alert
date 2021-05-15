@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 from utils import available_check, format_output
+from copy import deepcopy
 
 
 @st.cache
@@ -46,7 +47,10 @@ new_output = format_output(output)
 if isinstance(new_output, str):
     st.error(new_output)
 else:
-    st.dataframe(new_output)
+    table = deepcopy(new_output)
+    table.reset_index(inplace=True, drop=True)
+    st.table(table)
+    # st.dataframe(new_output)
 
 # left_column_2, center_column_2, right_column_2, right_column_2a,  right_column_2b = st.beta_columns(5)
 # st.write(output)

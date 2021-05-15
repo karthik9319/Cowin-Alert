@@ -1,7 +1,5 @@
 import datetime
 import requests
-from fake_useragent import UserAgent
-import json
 import pandas as pd
 from pprint import pprint
 
@@ -48,12 +46,14 @@ def available_check(days, pincode, flag):
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"}
             response = requests.get(base_url, headers=headers)
             if response.status_code == 200:
+                print("yes")
                 # if (response.ok) and ('centers' in json.loads(response.text)):
                 #     resp_json = json.loads(response.text)['centers']
                 #     if resp_json is not None:
                 #         df = pd.DataFrame(resp_json)
                 #         print(df)
                 result = response.json()
+                pprint(result)
                 centers = result['centers']
                 for center in centers:
                     sessions = center['sessions']
@@ -106,14 +106,14 @@ def format_output(output):
     if len(name) > 0:    
         new_df = pd.DataFrame()
         
-        new_df['state_name'] = state_name
-        new_df['district_name'] = district_name
+        new_df['State Name'] = state_name
+        new_df['District Name'] = district_name
         new_df['Pincode'] = pincode
         new_df['Date'] = date
         
         new_df['Center Name'] = name
         new_df['Block Name'] = block_name
-        new_df['Age Limit'] = age_limit
+        new_df['Minimum Age Limit'] = age_limit
         # new_df['hospital_name'] = hospital_name
         new_df['Vaccine Type'] = vaccine_type
         
