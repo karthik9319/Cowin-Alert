@@ -34,7 +34,7 @@ def day_list(numdays):
 # temp_user_agent = UserAgent()
 # browser_header = {'User-Agent': temp_user_agent.random}
 
-def available_check(days, pincode, flag):
+def available_check(days, pincode):
     output = []
     date_str_frm = day_list(days)
     for date in date_str_frm:
@@ -46,7 +46,6 @@ def available_check(days, pincode, flag):
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"}
             response = requests.get(base_url, headers=headers)
             if response.status_code == 200:
-                print("yes")
                 # if (response.ok) and ('centers' in json.loads(response.text)):
                 #     resp_json = json.loads(response.text)['centers']
                 #     if resp_json is not None:
@@ -104,6 +103,8 @@ def format_output(output):
         state_name.append(output[item]['state_name'])
         
     if len(name) > 0:    
+        
+        available_capacity = [int(x) for x in available_capacity]
         new_df = pd.DataFrame()
         
         new_df['State Name'] = state_name

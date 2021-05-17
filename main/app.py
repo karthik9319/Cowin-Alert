@@ -35,9 +35,9 @@ region = st.sidebar.selectbox("Region: ", sorted(division_df['Division Name'].un
 pincode_df = df[df['Division Name'] == region]
 pincode = st.sidebar.selectbox("Pincode: ", sorted(pincode_df['Pincode'].unique()))
 
-flag = st.selectbox("Show Only Availible Slots: ", [False, True])
+# flag = st.selectbox("Show Only Availible Slots: ", [False, True]
 
-output = available_check(numdays, pincode, flag)
+output = available_check(numdays, pincode)
 
 new_output = format_output(output)
 
@@ -47,10 +47,22 @@ new_output = format_output(output)
 if isinstance(new_output, str):
     st.error(new_output)
 else:
-    table = deepcopy(new_output)
-    table.reset_index(inplace=True, drop=True)
+    # left_column_2, center_column_2 = st.beta_columns(2)
+    # with left_column_2:
+    #     flag = st.selectbox("Show Only Availible Slots: ", [False, True])
+    #     print(flag)
+    #     if flag:
+    #         final_df = new_output[new_output['Available Capacity'].astype(int) > 0]
+    
+    with center_column_2:
+        fee_type = st.selectbox("Show Fee Type: ", ['Free', 'Paid']) 
+        final_df = new_output[new_output['Fee Type'] == fee_type]
+        
+    table = deepcopy(final_df)
+    # table.reset_index(inplace=True, drop=True)
     st.table(table)
     # st.dataframe(new_output)
+
 
 # left_column_2, center_column_2, right_column_2, right_column_2a,  right_column_2b = st.beta_columns(5)
 # st.write(output)
