@@ -2,27 +2,7 @@ import datetime
 import requests
 import pandas as pd
 from pprint import pprint
-
-class UserDetails():
-    def __init__(self, 
-                 daterange: int,
-                 state: str,
-                 district: str,
-                 region: str,
-                 pincode: str):
-        
-        self.daterange = daterange
-        self.state = state
-        self.district = district
-        self.region = region
-        self.pincode = pincode
-        
-
-
-# def district_mapper(district):
-    
-
-
+from copy import deepcopy
 
 
 def day_list(numdays):
@@ -38,7 +18,7 @@ def available_check(days, pincode):
     output = []
     date_str_frm = day_list(days)
     for date in date_str_frm:
-        #     base_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id={}&date={}".format(
+        #     base_url_districtid = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id={}&date={}".format(
         # district_id, date)
             base_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode={}&date={}".format(
         pincode, date)
@@ -46,13 +26,9 @@ def available_check(days, pincode):
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"}
             response = requests.get(base_url, headers=headers)
             if response.status_code == 200:
-                # if (response.ok) and ('centers' in json.loads(response.text)):
-                #     resp_json = json.loads(response.text)['centers']
-                #     if resp_json is not None:
-                #         df = pd.DataFrame(resp_json)
-                #         print(df)
+                print("success")
                 result = response.json()
-                pprint(result)
+                # pprint(result)
                 centers = result['centers']
                 for center in centers:
                     sessions = center['sessions']
@@ -72,7 +48,8 @@ def available_check(days, pincode):
                             
                         }          
                         output.append(res)
-                        
+            else:
+                print("error")            
         
     return output
 
@@ -123,14 +100,12 @@ def format_output(output):
         new_df['Fee Type'] = fee_type
         
         
-        
-
-    # new_df.reset_index(inplace=True, drop=True)
     else:
         new_df = "Sorry No data available"
         
     return new_df
         
         
-# def pretty_print(dataframe):
-    
+def filter_column(df, col, value):
+    df_temp = deepcopy(df.loc[df[col] == value, :])
+    return df_temp
